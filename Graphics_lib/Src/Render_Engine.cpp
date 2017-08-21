@@ -36,40 +36,38 @@ Render_Engine::~Render_Engine()
 
 void Render_Engine::load_dependencies()
 {
-    this->models.push_back( obj_load.Load_Object("/home/kchetty/Desktop/tmper/Graphics_lib/Object_files/dwarf.obj") );
-    this->models.push_back( obj_load.Load_Object("/home/kchetty/Desktop/tmper/Graphics_lib/Object_files/test2.obj") );
+    this->models.push_back( obj_load.Load_Object("/home/kchetty/Desktop/derper/Graphics_lib/Object_files/dwarf.obj") );
+    this->models.push_back( obj_load.Load_Object("/home/kchetty/Desktop/derper/Graphics_lib/Object_files/test2.obj") );
 
-    this->textures.push_back( new Model_Text( load.load_texture("/home/kchetty/Desktop/tmper/Graphics_lib/Textures/wildtextures-creased-gilded-decorative-paper-texture.jpg") )  );
-    this->textures.push_back( new Model_Text( load.load_texture("/home/kchetty/Desktop/tmper/Graphics_lib/Textures/crate.png") )  );
-    this->textures.push_back( new Model_Text( load.load_texture("/home/kchetty/Desktop/tmper/Graphics_lib/Textures/wall.png") ) );
-    this->textures.push_back( new Model_Text( load.load_texture("/home/kchetty/Desktop/tmper/Graphics_lib/Textures/enemy.png") ) );
+    this->textures.push_back( new Model_Text( load.load_texture("/home/kchetty/Desktop/derper/Graphics_lib/Textures/wildtextures-creased-gilded-decorative-paper-texture.jpg") )  );
+    this->textures.push_back( new Model_Text( load.load_texture("/home/kchetty/Desktop/derper/Graphics_lib/Textures/crate.png") )  );
+    this->textures.push_back( new Model_Text( load.load_texture("/home/kchetty/Desktop/derper/Graphics_lib/Textures/wall.png") ) );
+    this->textures.push_back( new Model_Text( load.load_texture("/home/kchetty/Desktop/derper/Graphics_lib/Textures/enemy.png") ) );
 
     this->text_model.push_back( new Text_Model( *this->models[0], *this->textures[0] ) );
-    this->text_model.push_back( new Text_Model( *this->models[1], *this->textures[1] ) );
+    this->text_model.push_back( new Text_Model( *this->models[1], *this->textures[0] ) );
     this->text_model.push_back( new Text_Model( *this->models[1], *this->textures[2] ) );
     this->text_model.push_back( new Text_Model( *this->models[1], *this->textures[3] ) );
 
-    for (int count = 0; count < this->text_model.size(); count++)
-    {
-        std::cout <<  this->text_model[count]->GetModel().GetVertexCount() << std::endl;
-    }
-
-    std::cout << this->textures[0]->GetTextureID() << std::endl;
-
-    std::cout << "SHALLLOMME " << std::endl;
-
-    //exit (8);
 }
 
 void Render_Engine::Create_Components( Engine &engine )
 {
     //Text_Model const &tmp_model, GLfloat const &rot_x, GLfloat const &rot_y, GLfloat const &rot_z, GLfloat const &tmp_scale, glm::vec3 const &tmp_pos
 
-    this->components.push_back( new Component( *this->text_model[0], 0.0f, 0.0f, 0.0f, 0.0f, glm::vec3( engine.getPlayer().getXPos() / 10, 1.0f, engine.getPlayer().getYPos()/10 ))  );
+    this->components.push_back( new Component( *this->text_model[0], 0.0f, 0.0f, 0.0f, 0.0f, glm::vec3( engine.getPlayer().getXPos() / 24 , 0.0f, engine.getPlayer().getYPos() / 24 ))  );
 
     //std::cout << engine.getPlayer().getYPos() << " " << engine.getPlayer().getXPos() << std::endl;
     //this->components.push_back( new Component( *this->text_model[0], 0.0f, 0.0f, 0.0f, 0.0f, glm::vec3( 0.0f, 0.0f, 0.0f ))  );
 
+
+    for (size_t z = 1; z < 17; z++)
+    {
+        for (size_t x = 0; x < 16; x++)
+        {
+            this->components.push_back( new Component( *this->text_model[1], 0.0f, 0.0f, 0.0f, 0.0f, glm::vec3( (x * 48) / 24 , -1.0f, ( z * 48 ) / 24 ))  );
+        }
+    }
 	/*for (size_t i = 0; i < engine.getPlayer().getBombVector().size(); i++)
 	{
 		engine.getPlayer().getBombVector()[i].sprite__.setTexture(bombText);
@@ -80,7 +78,8 @@ void Render_Engine::Create_Components( Engine &engine )
 
 	for (size_t i = 0; i < engine.getWallVector().size(); i++)
 	{
-        this->components.push_back( new Component( *this->text_model[1], 0.0f, 0.0f, 0.0f, 0.0f, glm::vec3( engine.getWallVector()[i].getXPos()/10, 1.0f, engine.getWallVector()[i].getYPos()/10 ))  );
+        this->components.push_back( new Component( *this->text_model[1], 0.0f, 0.0f, 0.0f, 0.0f, glm::vec3( engine.getWallVector()[i].getXPos() / 24 , 1.0f, engine.getWallVector()[i].getYPos() / 24 ))  );
+        std::cout << " XX " << engine.getWallVector()[i].getXPos() << " YY " << engine.getWallVector()[i].getYPos() << std::endl;
 		//engine.getWallVector()[i].sprite__.setPosition(engine.getWallVector()[i].getXPos(), engine.getWallVector()[i].getYPos());
 		//engine.getWallVector()[i].sprite__.setOrigin(0, 48);
 		//window.draw(engine.getWallVector()[i].sprite__);
@@ -199,7 +198,7 @@ void Render_Engine::init()
     lastX = this->Screen_Width / 2.0f;
     lastY = this->Screen_Height / 2.0f;
 
-    this->shader.compile_shaders("/home/kchetty/Desktop/tmper/Graphics_lib/Shaders/Colour_Shading.vert", "/home/kchetty/Desktop/tmper/Graphics_lib/Shaders/Colour_Shasiner.frag");
+    this->shader.compile_shaders("/home/kchetty/Desktop/derper/Graphics_lib/Shaders/Colour_Shading.vert", "/home/kchetty/Desktop/derper/Graphics_lib/Shaders/Colour_Shasiner.frag");
 
     load_dependencies();
 
